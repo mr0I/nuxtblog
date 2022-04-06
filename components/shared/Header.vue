@@ -198,4 +198,7 @@
     top: 50px;
     background: #fff;
   }
+  .navbar-expand-lg .navbar-collapse {
+    direction: rtl;
+  }
 </style>
