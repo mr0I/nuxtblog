@@ -16,13 +16,13 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ],
     script: [
-      {src: './js/jquery-1.11.1.min.js' , body:true},
-      {src: './js/popper.min.js' , body:true},
-      {src: './js/bootstrap.min.js' , body:true},
-      {src: './js/jquery.simple-checkbox-table.min.js' , body:true},
-      {src: './js/material.min.js' , body:true},
-      {src: './js/toastr.min.js' , body:true},
-      {src: './js/script.js' , body:true}
+      {src: '/js/jquery-1.11.1.min.js' , body:true},
+      {src: '/js/popper.min.js' , body:true},
+      {src: '/js/bootstrap.min.js' , body:true},
+      {src: '/js/jquery.simple-checkbox-table.min.js' , body:true},
+      {src: '/js/material.min.js' , body:true},
+      {src: '/js/toastr.min.js' , body:true},
+      {src: '/js/script.js' , body:true}
     ],
   },
 

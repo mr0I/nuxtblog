@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p>Please enter an id and click the button.</p>
     <input type="text" v-model="userId">
     <button @click="onLoadUser">Load User</button>
     <nuxt-child />
@@ -23,7 +24,4 @@
   }
 </script>
 
-<style scoped>
-
-</style>
 

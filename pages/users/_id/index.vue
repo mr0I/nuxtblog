@@ -1,5 +1,7 @@
 <template>
-  <h1>A single user, with ID: {{ $route.params.id }}</h1>
+  <div>
+    <h1>A single user, with ID: {{ $route.params.id }}</h1>
+  </div>
 </template>
 
 <script>

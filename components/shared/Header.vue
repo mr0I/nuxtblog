@@ -1,6 +1,6 @@
 <template>
   <!-- Header-Start -->
-  <header >
+  <header style="margin-bottom: 100px;">
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
       <a class="navbar-brand mx-2">
         <img src="../../assets/images/logo.png" alt="" width="30" height="30">
