@@ -1,11 +1,22 @@
 <template>
-  <h1 class="error-msg">An error occurred, we're sorry!</h1>
+  <div class="error-page">
+    <h1>Oops, something went wrong!</h1>
+    <p>Back to <a href="/">safety</a>!</p>
+  </div>
 </template>
 
-
 <style scoped>
-  .error-msg{
+  .error-page {
     text-align: center;
-    margin: 137px auto;
+  }
+
+  .error-page a {
+    text-decoration: none;
+    color: red;
+  }
+
+  .error-page a:hover,
+  .error-page a:active {
+    color: salmon;
   }
 </style>

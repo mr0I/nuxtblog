@@ -645,13 +645,13 @@ section.main_content aside ul.category li.collapse a.cat-item:hover span {
 }
 
 footer {
-  position: relative;
+  position: absolute;
+  bottom: 0;
   width: 100%;
+  background-color: #007669;
   height: auto;
-  min-height: 200px;
   text-align: center !important;
   margin-top: 150px;
-  /*background-image: url("../assets/bc.svg");*/
 }
 footer ul {
   text-align: center;
@@ -660,7 +660,7 @@ footer ul {
 footer ul a {
   padding: 10px;
   margin-top: 10px;
-  color: #757575;
+  color: #eeeeee;
 }
 
 .block {

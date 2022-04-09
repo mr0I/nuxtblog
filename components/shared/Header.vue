@@ -41,6 +41,26 @@
               <li class="dropdown-item" href="#">سایر</li>
             </ul>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              extras
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+              <li class="dropdown-item">
+                <nuxt-link class="nav-link" to="/users" active-class="active">users <span class="sr-only">(current)</span></nuxt-link>
+              </li>
+              <li class="dropdown-item dropdown">posts
+                <ul>
+                  <li>
+                    <nuxt-link class="nav-link" to="/posts" active-class="active">posts <span class="sr-only">(current)</span></nuxt-link>
+                  </li>
+                  <li>
+                    <nuxt-link class="nav-link" to="/posts/admin" active-class="active">posts(Admin) <span class="sr-only">(current)</span></nuxt-link>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
         </ul>
 
         <form action="search.html" class="form-inline" id="main_search">
