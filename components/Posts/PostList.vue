@@ -5,7 +5,6 @@
       :is-admin="isAdmin"
       thumbnail="https://static.pexels.com/photos/270348/pexels-photo-270348.jpeg"
       title="Hello there!"
-      testAttr = "sdadad dasdadad"
       previewText="This my first post!" />
     <PostPreview
       id="2"

@@ -29,7 +29,11 @@ export default {
   /*
 ** Customize the progress-bar color
 */
-  loading: { color: '#3B8070' },
+  loading: { color: '#3B8070',height: '4px', duration: 5000},
+  loadingIndicator: {
+    name: 'circle',
+    color: '#fa923f'
+  },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
@@ -44,6 +48,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -55,7 +60,12 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
   ],
+  axios: {
+    baseURL: process.env.BASE_URL || 'http://127.0.0.1:8888/api/v1/',
+    credentials: false
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

@@ -7,7 +7,6 @@
       <div class="post-content">
         <h1>{{ title }}</h1>
         <p>{{ previewText }}</p>
-        <strong>{{ testAttr }}</strong>
         <span>is admin: {{ isAdmin }}</span>
       </div>
     </article>
@@ -37,10 +36,6 @@ export default {
     thumbnail: {
       type: String,
       required: true
-    },
-    testAttr: {
-      type: String,
-      required:false
     }
   },
   computed: {
