@@ -66,6 +66,9 @@ export default {
     baseURL: process.env.BASE_URL || 'http://127.0.0.1:8888/api/v1/',
     credentials: false
   },
+  env:{
+    BASE_URL : 'http://127.0.0.1:8888/api/v1/'
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

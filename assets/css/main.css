@@ -646,6 +646,7 @@ section.main_content aside ul.category li.collapse a.cat-item:hover span {
 }
 
 footer {
+  display: none;
   position: absolute;
   bottom: 0;
   width: 100%;
