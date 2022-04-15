@@ -65,6 +65,7 @@
 
 <script>
   import axios from 'axios';
+  import * as Validator from '@/plugins/validate';
 
   export default {
     data(){
@@ -88,6 +89,11 @@
       async RegisterUser(){
         // form validation
         this.errors = [];
+
+        //console.log(this.required(this.formData.email));
+        console.log('2',Validator.required(this.formData.email));
+
+        return;
 
         if (this.formData.email === '') {
           this.errors.push({email: 'فیلد ایمیل را تکمیل کنید!'});
