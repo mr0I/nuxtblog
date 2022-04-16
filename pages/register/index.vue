@@ -21,10 +21,11 @@
                   <div class="d-flex flex-wrap justify-content-center">
                     <div class="input-group my-4 mr-sm-2 w-50">
                       <div class="input-group-prepend"><div class="input-group-text"><i class="material-icons">email</i></div></div>
-                      <input type="text" class="form-control" placeholder="ایمیل*" v-model="formData.email">
+                      <input type="text" class="form-control" placeholder="ایمیل*" v-model="formData.email"
+                             @input="changeInput()">
                       <div class="errors w-100 p-2" v-if="errors.length">
                         <ul>
-                          <li class="float-right text-danger" v-for="error in errors">{{ error.email }}</li>
+                          <li class="text-right text-danger w-100" v-for="error in errors">{{ error.email }}</li>
                         </ul>
                       </div>
                     </div>
@@ -32,10 +33,11 @@
                   <div class="d-flex flex-wrap justify-content-center">
                     <div class="input-group my-4 mr-sm-2 w-50">
                       <div class="input-group-prepend"><div class="input-group-text"><i class="material-icons">vpn_key</i></div></div>
-                      <input type="password" class="form-control" placeholder="رمز عبور*" v-model="formData.password">
+                      <input type="password" class="form-control" placeholder="رمز عبور*" v-model="formData.password"
+                             @input="changeInput()">
                       <div class="errors w-100 p-2" v-if="errors.length">
                         <ul>
-                          <li class="float-right text-danger" v-for="error in errors">{{ error.password }}</li>
+                          <li class="text-right text-danger w-100" v-for="error in errors">{{ error.password }}</li>
                         </ul>
                       </div>
                     </div>
@@ -43,15 +45,16 @@
                   <div class="d-flex flex-wrap justify-content-center">
                     <div class="input-group my-4 mr-sm-2 w-50">
                       <div class="input-group-prepend"><div class="input-group-text"><i class="material-icons">vpn_key</i></div></div>
-                      <input type="password" class="form-control" placeholder="تکرار رمز عبور*" v-model="formData.password_confirmation">
+                      <input type="password" class="form-control" placeholder="تکرار رمز عبور*" v-model="formData.password_confirmation"
+                             @input="changeInput()">
                       <div class="errors w-100 p-2" v-if="errors.length">
                         <ul>
-                          <li class="float-right text-danger" v-for="error in errors">{{ error.password_confirmation }}</li>
+                          <li class="text-right text-danger w-100" v-for="error in errors">{{ error.password_confirmation }}</li>
                         </ul>
                       </div>
                     </div>
                   </div>
-                  <input type="submit" value="send" class="btn btn-primary w-50 my-4">
+                  <input type="submit" value="send" class="btn btn-primary w-50 my-4" :disabled="!is_dirty">
                 </form>
               </div>
             </div>
@@ -77,7 +80,7 @@
           password_confirmation: ''
         },
         errors:[],
-        baseUrl :  process.env.BASE_URL
+        is_dirty: false
       }
     },
     // computed:{
@@ -86,34 +89,24 @@
     //   }
     // },
     methods:{
+      changeInput(){
+        this.is_dirty = this.formData.email !== '' && this.formData.password !== '' && this.formData.password_confirmation !== '';
+      },
       async RegisterUser(){
         // form validation
         this.errors = [];
+        const email = this.formData.email;
+        const password = this.formData.password;
+        const password_confirmation = this.formData.password_confirmation;
 
-        //console.log(this.required(this.formData.email));
-        console.log('2',Validator.required(this.formData.email));
-
-        return;
-
-        if (this.formData.email === '') {
-          this.errors.push({email: 'فیلد ایمیل را تکمیل کنید!'});
-        } else if (! this.validEmail(this.formData.email)){
-          this.errors.push({email: 'ایمیل معتبر نیست!'});
-        } else if((this.formData.email).length > 255){
-          this.errors.push({email: 'ایمیل کاربر نمیتواند بیشتر از 255 کاراکتر داشته باشد!'});
-        } else if (! await this.uniqueEmail(this.formData.email)) {
-          this.errors.push({email: 'ایمیل تکراری است!'});
-        }
-
-        if (this.formData.password === '') {
-          this.errors.push({password: 'فیلد رمز عبور را تکمیل کنید!'});
-        } else if ((this.formData.password).length < 6 ){
-          this.errors.push({password: 'رمز عبور باید حداقل 6 کاراکتر داشته باشد!'});
-        }
-
-        if (this.formData.password_confirmation !== this.formData.password) {
-          this.errors.push({password_confirmation: 'رمز عبور و تکرار آن برابر نیستند!'});
-        }
+        //console.log(this.required(this.formData.email)); // alternate method
+        if (! Validator.required(email)) this.errors.push({email: 'فیلد ایمیل را تکمیل کنید!'});
+        if (! Validator.email(email)) this.errors.push({email: 'ایمیل معتبر نیست!'});
+        if (! Validator.max(email,255)) this.errors.push({email: 'ایمیل کاربر نمیتواند بیشتر از 255 کاراکتر داشته باشد!'});
+        if (! await this.uniqueEmail(email)) this.errors.push({email: 'ایمیل تکراری است!'});
+        if (! Validator.required(password)) this.errors.push({password: 'فیلد رمز عبور را تکمیل کنید!'});
+        if (! Validator.min(password,6)) this.errors.push({password: 'رمز عبور باید حداقل 6 کاراکتر داشته باشد!'});
+        if (! Validator.equal(password,password_confirmation)) this.errors.push({password_confirmation: 'رمز عبور و تکرار آن برابر نیستند!'});
 
         if ((this.errors).length === 0){
           const register_data = {
@@ -125,10 +118,6 @@
 
           this.$store.dispatch("RegisterUser", register_data);
         }
-      },
-      validEmail:function(email) {
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
       },
       uniqueEmail:async function(email) {
         return axios.get(`${process.env.BASE_URL}auth/IsExistUserByEmail`, {
@@ -150,5 +139,8 @@
 <style scoped>
   .input-group{
     direction: rtl;
+  }
+  input:disabled{
+    cursor: not-allowed;
   }
 </style>
