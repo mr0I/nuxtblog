@@ -100,10 +100,16 @@
         const password_confirmation = this.formData.password_confirmation;
 
         //console.log(this.required(this.formData.email)); // alternate method
-        if (! Validator.required(email)) this.errors.push({email: 'فیلد ایمیل را تکمیل کنید!'});
-        if (! Validator.email(email)) this.errors.push({email: 'ایمیل معتبر نیست!'});
-        if (! Validator.max(email,255)) this.errors.push({email: 'ایمیل کاربر نمیتواند بیشتر از 255 کاراکتر داشته باشد!'});
-        if (! await this.uniqueEmail(email)) this.errors.push({email: 'ایمیل تکراری است!'});
+        if (! Validator.required(email)) {
+          this.errors.push({email: 'فیلد ایمیل را تکمیل کنید!'});
+        } else if (! Validator.email(email)) {
+          this.errors.push({email: 'ایمیل معتبر نیست!'});
+        } else if (! Validator.max(email,255)) {
+          this.errors.push({email: 'ایمیل کاربر نمیتواند بیشتر از 255 کاراکتر داشته باشد!'});
+        } else if (! await this.uniqueEmail(email)) {
+          this.errors.push({email: 'ایمیل تکراری است!'});
+        }
+
         if (! Validator.required(password)) this.errors.push({password: 'فیلد رمز عبور را تکمیل کنید!'});
         if (! Validator.min(password,6)) this.errors.push({password: 'رمز عبور باید حداقل 6 کاراکتر داشته باشد!'});
         if (! Validator.equal(password,password_confirmation)) this.errors.push({password_confirmation: 'رمز عبور و تکرار آن برابر نیستند!'});
@@ -120,17 +126,18 @@
         }
       },
       uniqueEmail:async function(email) {
-        return axios.get(`${process.env.BASE_URL}auth/IsExistUserByEmail`, {
-          params: { email: email }
-        }).then(
-          response => {
-            console.log(response);
-            return response.data.result;
+        return fetch(`${process.env.BASE_URL}auth/IsExistUserByEmail?email=${email}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
           },
-          error => {
-            console.log(error);
-          }
-        );
+        }).then(response => response.json())
+          .then(data => {
+            return data.result;
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
       }
     },
   }

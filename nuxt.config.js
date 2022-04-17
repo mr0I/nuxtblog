@@ -13,7 +13,8 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      // { rel: 'stylesheet', href: "https://fonts.googleapis.com/css?family=Open+Sans" }
     ],
     script: [
       {src: '/js/jquery-1.11.1.min.js' , body:true},
@@ -49,6 +50,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/validator' },
+    { src: '~/plugins/date-filter' },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -69,7 +71,10 @@ export default {
   env:{
     BASE_URL : 'http://127.0.0.1:8888/api/v1/'
   },
-
+  transition: {
+    name: 'fade',
+    mode: 'out-in'
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }

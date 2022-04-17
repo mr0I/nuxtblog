@@ -8,6 +8,7 @@
   import PostList from '@/components/Posts/PostList'
 
   export default {
+    name : 'AdminPage',
     components: {
       PostList
     }
