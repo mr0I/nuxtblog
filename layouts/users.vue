@@ -2,8 +2,8 @@
   <div>
     <Header />
     <header>
-      USERS SECTION
-    </header>
+    USERS SECTION
+  </header>
     <nuxt/>
   </div>
 </template>

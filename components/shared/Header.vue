@@ -61,6 +61,11 @@
               </li>
             </ul>
           </li>
+
+
+          <li class="nav-item">
+            <nuxt-link class="nav-link" to="/dashboard" active-class="active">dash <span class="sr-only">(current)</span></nuxt-link>
+          </li>
         </ul>
 
         <form action="search.html" class="form-inline" id="main_search">
@@ -91,86 +96,6 @@
       </div>
     </nav>
   </header>
-
-  <!--<header v-else>-->
-    <!--<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="z-index: 20 !important">-->
-      <!--<input type="checkbox" id="check" class="checkbox" checked hidden>-->
-      <!--<div class="menu_bar">-->
-        <!--<label for="check" class="menu">-->
-          <!--<div class="menu-line menu-line-1"></div>-->
-          <!--<div class="menu-line menu-line-2"></div>-->
-          <!--<div class="menu-line menu-line-3"></div>-->
-        <!--</label>-->
-      <!--</div>-->
-      <!--<a class="navbar-brand mx-2">-->
-        <!--<img src="../../assets/logo.png" alt="" width="30" height="30">-->
-      <!--</a>-->
-      <!--<div class="collapse navbar-collapse" id="">-->
-        <!--<ul class="navbar-nav mr-auto">-->
-          <!--<li class="nav-item">-->
-            <!--<nuxt-link class="nav-link" to="/">-->
-              <!--<i class="material-icons align-middle">open_in_new</i>-->
-              <!--بازگشت به سایت-->
-            <!--</nuxt-link>-->
-          <!--</li>-->
-          <!--<li class="nav-item">-->
-            <!--<a class="nav-link" href="#" @click.prevent="SignOut()">-->
-              <!--<i class="material-icons align-middle">exit_to_app</i>-->
-              <!--خروج-->
-            <!--</a>-->
-          <!--</li>-->
-        <!--</ul>-->
-      <!--</div>-->
-    <!--</nav>-->
-
-    <!--<nav class="navigation" style="z-index: 10 !important">-->
-      <!--<ul class="menu" id="side_menu">-->
-        <!--<li class="menu-header">-->
-          <!--<img src="../../assets/noise.gif" width="100" height="100" v-if="!isAvatarLoaded">-->
-          <!--<img :src="UserAvatar" width="100" height="100" v-else-if="UserAvatar==''">-->
-          <!--<img :src="UserAvatar" width="100" height="100" v-else>-->
-          <!--<h5>نام کاربر: {{ UserFullName }}</h5>-->
-        <!--</li>-->
-
-        <!--<p class="mt-4">-->
-          <!--<nuxt-link to="/dashboard" class="sec_title" >داشبورد</nuxt-link>-->
-        <!--</p>-->
-        <!--<p class="mt-4"><a href="#sec1" class="sec_title" data-toggle="collapse">مقالات</a></p>-->
-        <!--<li class="collapse" id="sec1" data-parent="#side_menu">-->
-          <!--<ul>-->
-            <!--<li >-->
-              <!--<nuxt-link to="/dashboard/articles" class="side_menu_item">-->
-                <!--<span><i class="material-icons">list</i>لیست مقالات </span>-->
-              <!--</nuxt-link>-->
-            <!--</li>-->
-            <!--<li>-->
-              <!--<nuxt-link to="/dashboard/add_article" class="side_menu_item">-->
-                <!--<span><i class="material-icons">add</i>افزودن مقاله</span>-->
-              <!--</nuxt-link>-->
-            <!--</li>-->
-          <!--</ul>-->
-        <!--</li>-->
-        <!--<p class="mt-4"><a href="#sec2" class="sec_title" data-toggle="collapse">دسته بندی ها</a></p>-->
-        <!--<li class="collapse" id="sec2" data-parent="#side_menu">-->
-          <!--<ul>-->
-            <!--<li >-->
-              <!--<nuxt-link to="/dashboard/categories" class="side_menu_item">-->
-                <!--<span><i class="material-icons">list</i>لیست دسته بندی ها </span>-->
-              <!--</nuxt-link>-->
-            <!--</li>-->
-            <!--<li >-->
-              <!--<nuxt-link to="/dashboard/add_category" class="side_menu_item">-->
-                <!--<span><i class="material-icons">add</i>افزودن دسته بندی</span>-->
-              <!--</nuxt-link>-->
-            <!--</li>-->
-          <!--</ul>-->
-        <!--</li>-->
-        <!--<p class="mt-4">-->
-          <!--<nuxt-link to="/dashboard/profile" class="sec_title" >ویرایش پروفایل</nuxt-link>-->
-        <!--</p>-->
-      <!--</ul>-->
-    <!--</nav>-->
-  <!--</header>-->
   <!-- Header-End -->
 </template>
 

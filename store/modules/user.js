@@ -1,9 +1,8 @@
-import Vue from 'vue';
 import Swal from 'sweetalert2';
-// import {router} from '../../main';
 // import * as cryptojS from 'crypto-js';
-// import axios from 'axios';
-// import toastr from 'toastr';
+import toastr from 'toastr';
+import Cookie from 'js-cookie';
+import jwt from 'jsonwebtoken';
 
 
 const state = {
@@ -47,9 +46,9 @@ const getters = {
 const mutations = {
   CheckAuth(state){
     // check if cookie is set and not expired
-    if (Vue.cookie.get(process.env.VUE_APP_AUTH_COOKIE_NAME)){
-      const token = Vue.cookie.get(process.env.VUE_APP_AUTH_COOKIE_NAME);
-      decryptTokenFunc(process.env.VUE_APP_AUTH_SECRET_KEY , token);
+    if (Cookie.get(process.env.AUTH_COOKIE_NAME)){
+      const token = Cookie.get(process.env.AUTH_COOKIE_NAME);
+      decryptTokenFunc(process.env.AUTH_SECRET_KEY , token);
     } else {
       state.IsUserAuthenticated = false;
       state.user_id = '';
@@ -57,11 +56,8 @@ const mutations = {
   },
 
   SetAuthCookie(state, loginResult) {
-    let jsonLoginResult = JSON.parse(loginResult);
-
-    let unix_timestamp = jsonLoginResult.expire_time;
-    let expireIn = new Date(unix_timestamp * 1000);
-    Vue.cookie.set(process.env.VUE_APP_AUTH_COOKIE_NAME, loginResult, {
+    const expireIn = new Date((Date.now() + 10800) * 1000);
+    Cookie.set(process.env.AUTH_COOKIE_NAME, loginResult, {
       expires: expireIn
     },null,null,true,true);
   },
@@ -71,7 +67,7 @@ const mutations = {
   },
 
   SetUserMeta(state, userMeta) {
-    if (userMeta.UserAvatar !== null) state.UserAvatar = process.env.VUE_APP_UPLOAD_DIR + 'users_images/' + userMeta.UserAvatar.value;
+    if (userMeta.UserAvatar !== null) state.UserAvatar = process.env.UPLOAD_DIR + 'users_images/' + userMeta.UserAvatar.value;
     if (userMeta.UserGender !== null) state.UserGender = userMeta.UserGender.value;
   },
 
@@ -80,7 +76,7 @@ const mutations = {
   },
 
   SetUserAuthenticated(state, tokenData) {
-    if (Vue.cookie.get(process.env.VUE_APP_AUTH_COOKIE_NAME)){
+    if (Cookie.get(process.env.AUTH_COOKIE_NAME)){
       const {secret_key , token} = tokenData;
       decryptTokenFunc(secret_key , token);
     } else {
@@ -90,11 +86,11 @@ const mutations = {
   },
 
   SignOut() {
-    Vue.cookie.delete(process.env.VUE_APP_AUTH_COOKIE_NAME);
+    Cookie.remove(process.env.AUTH_COOKIE_NAME);
     state.IsUserAuthenticated = false;
     state.user_id = '';
     state.UserAvatar = '';
-    router.push('/');
+    this.$router.push('/');
   }
 
 };
@@ -104,7 +100,6 @@ const actions = {
     this.$axios
       .$post("auth/register", reg_data)
       .then(response => {
-        // vuexContext.commit('addPost', {...createdPost, id: data.name})
         if (response.userID) {
           Swal.fire({
             title: 'Success',
@@ -112,7 +107,6 @@ const actions = {
             icon: 'success',
             confirmButtonText: 'OK'
           });
-          // state.is_form_submited = false;
           this.$router.push('/login');
         } else {
           alert('خطا در انجام عملیات!!!');
@@ -121,13 +115,13 @@ const actions = {
       .catch(e => console.log(e));
   },
 
-  LoginUser(context, loginData) {
+  LoginUser(vuexContext, loginData) {
+    const axios = this.$axios;
+    const router = this.$router;
+
     return new Promise(function (resolve,reject) {
-      axios.post('/login', loginData ,{
-        headers:{
-          Authorization: 'Bearer ' + Vue.cookie.get(process.env.VUE_APP_AUTH_COOKIE_NAME)
-        }
-      }).then(response => {
+      axios.post('auth/login', loginData)
+      .then(response => {
         const result = response.data.result;
         const token = response.data.token;
 
@@ -139,22 +133,22 @@ const actions = {
           });
         }
         if (result === "Done") {
-          const resoveData={
+          const resolve_data={
             'token': token,
-            'context': context
+            'context': vuexContext
           };
-          resolve(resoveData);
+          resolve(resolve_data);
         } else {
           reject();
         }
       });
-
     }).then(function (resolve_data) {
-      const tokenData = {"secret_key":process.env.VUE_APP_AUTH_SECRET_KEY, "token":resolve_data.token};
+      console.log(resolve_data.token);
+      const tokenData = {"secret_key":process.env.AUTH_SECRET_KEY, "token":resolve_data.token};
       resolve_data.context.commit("SetAuthCookie", resolve_data.token);
       resolve_data.context.commit("SetUserAuthenticated", tokenData);
       const userData = {"id": state.user_id};
-      Vue.http.post('GetUserById', userData)
+      axios.post('GetUserById', userData)
         .then(response => {
           resolve_data.context.commit("SetUserFullName", response.body.User.name);
           if (response.body.UserMeta !== null  ) {
@@ -165,14 +159,14 @@ const actions = {
           resolve_data.context.commit("SetAvatarLoaded",true);
         });
       toastr.success('ورود موفق','تبریک');
-      router.push({name:'dash'});
-    }).catch(function () {
-      console.log('Login Error');
+      router.push('/dashboard');
+    }).catch(function (err) {
+      console.log('Login Error',err);
     });
   },
 
   GetUserById(context , user_id){
-    Vue.http.post('GetUserById', user_id)
+    this.$axios.post('auth/GetUserById', user_id)
       .then(response => {
         if (response.body.User !== null  ) context.commit("SetUserFullName", response.body.User.name);
         if (response.body.UserMeta !== null  ) {
@@ -184,12 +178,12 @@ const actions = {
       });
   },
 
-  CheckUserLogin(context){
-    context.commit("CheckAuth");
+  CheckAuth(vuexContext){
+    vuexContext.commit("CheckAuth");
   },
 
-  SignOutUser(context) {
-    context.commit("SignOut");
+  SignOutUser(vuexContext) {
+    vuexContext.commit("SignOut");
   },
 
   uploadImage(context , imageData){
@@ -236,19 +230,27 @@ const actions = {
 };
 
 function decryptTokenFunc(secret_key , token){
-  let jsonToken = '';
-  try {
-    jsonToken = JSON.parse(token);
-  } catch (e) {
-    return false;
-  }
-  let encrypted = jsonToken.ciphertext;
-  let salt = cryptojS.enc.Hex.parse(jsonToken.salt);
-  let iv = cryptojS.enc.Hex.parse(jsonToken.iv);
-  let key = cryptojS.PBKDF2(secret_key, salt, { hasher: cryptojS.algo.SHA512, keySize: 64/8, iterations: 999});
-  let decrypted = cryptojS.AES.decrypt(encrypted, key, { iv: iv});
-  state.user_id = decrypted.toString(cryptojS.enc.Utf8);
-  state.IsUserAuthenticated = (state.user_id !== '');
+  jwt.verify(token, secret_key, (err, user) => {
+    if (!err) {
+      state.user_id = user.data.id;
+      state.IsUserAuthenticated = (state.user_id !== '');
+    }
+  });
+
+
+  // let jsonToken = '';
+  // try {
+  //   jsonToken = JSON.parse(token);
+  // } catch (e) {
+  //   return false;
+  // }
+  // let encrypted = jsonToken.ciphertext;
+  // let salt = cryptojS.enc.Hex.parse(jsonToken.salt);
+  // let iv = cryptojS.enc.Hex.parse(jsonToken.iv);
+  // let key = cryptojS.PBKDF2(secret_key, salt, { hasher: cryptojS.algo.SHA512, keySize: 64/8, iterations: 999});
+  // let decrypted = cryptojS.AES.decrypt(encrypted, key, { iv: iv});
+  // state.user_id = decrypted.toString(cryptojS.enc.Utf8);
+  // state.IsUserAuthenticated = (state.user_id !== '');
 }
 
 export default {

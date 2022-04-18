@@ -69,7 +69,9 @@ export default {
     credentials: false
   },
   env:{
-    BASE_URL : 'http://127.0.0.1:8888/api/v1/'
+    BASE_URL : 'http://127.0.0.1:8888/api/v1/',
+    AUTH_COOKIE_NAME : 'Nuxtblog_Auth_Token',
+    AUTH_SECRET_KEY : 123456,
   },
   transition: {
     name: 'fade',
