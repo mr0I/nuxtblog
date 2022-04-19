@@ -100,6 +100,12 @@
 </template>
 
 <script>
+  export default {
+    created() {
+      this.$store.dispatch('CheckAuth');
+    }
+  }
+
   // export default {
   //   async created(){
   //     await this.$store.dispatch("CheckUserLogin");

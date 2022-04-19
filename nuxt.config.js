@@ -71,7 +71,7 @@ export default {
   env:{
     BASE_URL : 'http://127.0.0.1:8888/api/v1/',
     AUTH_COOKIE_NAME : 'Nuxtblog_Auth_Token',
-    AUTH_SECRET_KEY : 123456,
+    AUTH_SECRET_KEY : 'dc322c652aeb9d94980fa0d10a2250467000d8a04bb4ebcebd1e3df5c5d58e408979104f0379e3c6fff6d36042d45df0d27028e1af5648bd708024aa4676e52ff82c9b4dab79e75f91c961353a94bd7454efbeec968bd9f9120a5af23146151d4276e60688d439c5128d92a40f33b0cb19cfca37d070ea2e3556a620d3f26525',
   },
   transition: {
     name: 'fade',

@@ -34,8 +34,6 @@
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   </section>
@@ -43,11 +41,15 @@
 
 <script>
   export default {
+    middleware: ['guest'],
     data(){
       return{
         email:'',
         password:''
       }
+    },
+    created(){
+      console.log('loginnnn',this.$store.getters.IsUserAuthenticated);
     },
     computed:{
       isLoginFormSubmitted(){

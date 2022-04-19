@@ -9,7 +9,7 @@ const state = {
   UserFullName: '',
   UserAvatar: '',
   UserGender: '',
-  IsUserAuthenticated: false,
+  is_user_authenticated: false,
   is_form_submited: false,
   is_login_form_submited: false,
   is_avarat_loaded: false,
@@ -27,7 +27,7 @@ const getters = {
     return state.UserGender;
   },
   IsUserAuthenticated(state) {
-    return state.IsUserAuthenticated;
+    return state.is_user_authenticated;
   },
   IsFormSubmitted(state){
     return state.is_form_submited;
@@ -48,9 +48,9 @@ const mutations = {
     // check if cookie is set and not expired
     if (Cookie.get(process.env.AUTH_COOKIE_NAME)){
       const token = Cookie.get(process.env.AUTH_COOKIE_NAME);
-      decryptTokenFunc(process.env.AUTH_SECRET_KEY , token);
+      decryptTokenFunc(state,process.env.AUTH_SECRET_KEY , token);
     } else {
-      state.IsUserAuthenticated = false;
+      state.is_user_authenticated = false;
       state.user_id = '';
     }
   },
@@ -75,19 +75,19 @@ const mutations = {
     state.is_avarat_loaded=is_loaded;
   },
 
-  SetUserAuthenticated(state, tokenData) {
+  SetUserAuthenticated(state, token_data) {
     if (Cookie.get(process.env.AUTH_COOKIE_NAME)){
-      const {secret_key , token} = tokenData;
-      decryptTokenFunc(secret_key , token);
+      const {secret_key , token} = token_data;
+      decryptTokenFunc(state,secret_key,token);
     } else {
-      state.IsUserAuthenticated = false;
+      state.is_user_authenticated = false;
       state.user_id = '';
     }
   },
 
   SignOut() {
     Cookie.remove(process.env.AUTH_COOKIE_NAME);
-    state.IsUserAuthenticated = false;
+    state.is_user_authenticated = false;
     state.user_id = '';
     state.UserAvatar = '';
     this.$router.push('/');
@@ -143,40 +143,35 @@ const actions = {
         }
       });
     }).then(function (resolve_data) {
-      console.log(resolve_data.token);
       const tokenData = {"secret_key":process.env.AUTH_SECRET_KEY, "token":resolve_data.token};
+
       resolve_data.context.commit("SetAuthCookie", resolve_data.token);
       resolve_data.context.commit("SetUserAuthenticated", tokenData);
-      const userData = {"id": state.user_id};
-      axios.post('GetUserById', userData)
-        .then(response => {
-          resolve_data.context.commit("SetUserFullName", response.body.User.name);
-          if (response.body.UserMeta !== null  ) {
-            resolve_data.context.commit("SetUserMeta", response.body.UserMeta);
-          } else {
-            resolve_data.context.commit("SetUserMeta", null);
-          }
-          resolve_data.context.commit("SetAvatarLoaded",true);
-        });
+      setTimeout(function () {
+        const userData = {"id": state.user_id};
+        resolve_data.context.dispatch("GetUserById",userData);
+      } , 1500);
+
       toastr.success('ورود موفق','تبریک');
-      router.push('/dashboard');
+      router.push('dashboard');
     }).catch(function (err) {
       console.log('Login Error',err);
     });
   },
 
-  GetUserById(context , user_id){
-    this.$axios.post('auth/GetUserById', user_id)
+  GetUserById(vuexContext,user_data){
+    this.$axios.post('auth/getuserbyid', user_data)
       .then(response => {
-        if (response.body.User !== null  ) context.commit("SetUserFullName", response.body.User.name);
-        if (response.body.UserMeta !== null  ) {
-          context.commit("SetUserMeta", response.body.UserMeta);
+        if (response.data.body.User !== null  ) vuexContext.commit("SetUserFullName", response.data.body.User.name);
+        if (response.data.body.UserMeta !== null  ) {
+          vuexContext.commit("SetUserMeta", response.data.body.UserMeta);
         } else {
-          context.commit("SetUserMeta", null);
+          vuexContext.commit("SetUserMeta", null);
         }
-        context.commit("SetAvatarLoaded",true);
+        vuexContext.commit("SetAvatarLoaded",true);
       });
   },
+
 
   CheckAuth(vuexContext){
     vuexContext.commit("CheckAuth");
@@ -229,28 +224,14 @@ const actions = {
   }
 };
 
-function decryptTokenFunc(secret_key , token){
+
+function decryptTokenFunc(state,secret_key,token){
   jwt.verify(token, secret_key, (err, user) => {
     if (!err) {
       state.user_id = user.data.id;
-      state.IsUserAuthenticated = (state.user_id !== '');
+      state.is_user_authenticated = (state.user_id !== '');
     }
   });
-
-
-  // let jsonToken = '';
-  // try {
-  //   jsonToken = JSON.parse(token);
-  // } catch (e) {
-  //   return false;
-  // }
-  // let encrypted = jsonToken.ciphertext;
-  // let salt = cryptojS.enc.Hex.parse(jsonToken.salt);
-  // let iv = cryptojS.enc.Hex.parse(jsonToken.iv);
-  // let key = cryptojS.PBKDF2(secret_key, salt, { hasher: cryptojS.algo.SHA512, keySize: 64/8, iterations: 999});
-  // let decrypted = cryptojS.AES.decrypt(encrypted, key, { iv: iv});
-  // state.user_id = decrypted.toString(cryptojS.enc.Utf8);
-  // state.IsUserAuthenticated = (state.user_id !== '');
 }
 
 export default {
