@@ -48,6 +48,20 @@
         password:''
       }
     },
+    head () {
+      return {
+        title: 'Login Page',
+        // script: [
+        //   {
+        //     hid: 'stripe',
+        //     src: '<https://js.stripe.com/v3/>',
+        //     defer: true,
+        //     // Changed after script load
+        //     callback: () => { this.isStripeLoaded = true }
+        //   }
+        // ]
+      }
+    },
     created(){
       console.log('loginnnn',this.$store.getters.IsUserAuthenticated);
     },

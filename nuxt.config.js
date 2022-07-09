@@ -23,7 +23,7 @@ export default {
       {src: '/js/jquery.simple-checkbox-table.min.js' , body:true},
       {src: '/js/material.min.js' , body:true},
       {src: '/js/toastr.min.js' , body:true},
-      {src: '/js/script.js' , body:true}
+      {src: '/js/script.js' , body:true , defer:true}
     ],
   },
 
